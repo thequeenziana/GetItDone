@@ -62,6 +62,8 @@ python manage.py migrate <br>
 python manage.py runserver <br>
 
 ### How to commit into new repository? <br>
+1. download git<br>
+1. Open Git Bash on the selected directory<br>
 git clone https://github.com/thequeenziana/GetItDone.git <br>
 cd GetItDone <br>
 git config --global user.name "Ziana Jesin Bhuiyan" <br>
