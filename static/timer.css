@@ -1,0 +1,18 @@
+timer {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFF;
+    background-color: #7B68EE; /* Gradient purple color */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+button {
+    color: #FFF;
+    background-color: #000; /* Black aesthetic */
+    padding: 5px 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}

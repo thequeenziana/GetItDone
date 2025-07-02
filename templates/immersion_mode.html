@@ -1,0 +1,265 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Immersion Mode</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://bootswatch.com/5/united/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+    $(function() {
+    $("#timer-container").draggable();
+    });
+    
+    $(function() {
+    $(".container").draggable();
+    });
+
+    </script>
+    <meta charset="UTF-8">
+    <title>Task Timer</title>
+    <style>
+         #theme-selector button {
+        display: block; /* Stack the buttons vertically */
+        width: 105px; /* Adjust this value to change the width of the buttons */
+        margin-bottom: 10px; /* Add some space between the buttons */
+        font-size: 12px; /* Adjust this value to change the size of the text */
+        }
+        /* CSS to make the video play in the background */
+        #background-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+        }
+
+        /* CSS to position the content on top of the video */
+        #content {
+            position: relative;
+            z-index: 1;
+        }
+        /* CSS for timer styling */
+        #timer-container {
+            width: 400px;
+            height: 250px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 2px solid #ffffff;
+            border-radius: 10px;
+            text-align: center;
+            background-color: rgba(88, 83, 83, 0.26);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+        }
+
+        #timer {
+            font-size: 36px;
+            font-weight: bold;
+            color: #fefcff; /* Purple color */
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 40px;
+            background-color: #282b2856;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            background-color: #99b8d8;
+        }
+        
+        select, input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #160202;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #taskList {
+        list-style-type: none;
+        border: 2px solid #ffffff; /* Add a white border around the task list */
+        padding: 10px; /* Add some padding inside the border */
+        }
+
+        #taskList .task {
+        margin: 5px;
+        padding: 5px;
+        width: auto;
+        cursor: move;
+        color: #ffffff; /* Change the color of the task names to white */
+        }
+
+        .container {
+        background-color: rgba(88, 83, 83, 0.5);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+        max-width: 300px;  /* Adjust this value to fit the task names */
+        margin: 5px auto;
+        }
+
+        .checkmark {
+        margin-right: 10px; /* Add space between checkbox and task name */
+        }
+
+        input[type="checkbox"] {
+        transform: scale(1.5); /* Make the checkbox a little bigger */
+        margin-right: 10px; /* Add space between checkbox and task name */
+        }
+
+        .task-name {
+        margin-right: 10px; /* Add space between task name and dustbin emoji */
+        }
+
+        #back-button-container {
+        position: fixed;
+        top: 0; /* Position at the top of the viewport */
+        right: 0; /* Position at the right of the viewport */
+        z-index: 9999; /* Ensure it's above other elements */
+        }
+
+        #back-button {
+            padding: 10px 20px;
+            background-color: #5b6979b2; /* Bootstrap primary color */
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        #back-button:hover {
+            background-color: #99badd; /* Darker shade of primary color */
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <div id="back-button-container">
+        <button id="back-button" onclick="goBack()">Back to Project</button>
+    </div>
+    <video id="background-video" loop autoplay>
+        <source src="{% static 'media/themes/default.mp4' %}" type="video/mp4">
+    </video>
+    
+    <div class="container" id="draggable">
+        <ul id="taskList">
+          {% for task in tasks %}
+            <li class="task">
+              <label>
+                <input type="checkbox" onchange="this.form.submit()" {% if task.completion %}checked{% endif %}>
+                <span class="checkmark"></span>
+                {{ task.task_name }}
+              </label>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      
+    <!-- Timer container -->
+    <div id="timer-container" id="draggable">
+        <strong>Task Timer</strong>
+        <div id="timer">00:00:00</div>
+        <button style="background-color: rgb(16, 1, 29); color: rgb(255, 255, 255);" onclick="setTimer()">Set</button>
+        <button style="background-color: rgb(10, 0, 19); color: rgb(255, 255, 255);" onclick="startTimer()">Start</button>
+        <button style="background-color: rgb(10, 0, 19); color: rgb(255, 255, 255);" onclick="pauseTimer()">Pause</button>
+        <button style="background-color: rgb(7, 0, 14); color: rgb(255, 255, 255);" onclick="resetTimer()">Reset</button>
+
+    </div>
+    
+    <div id="theme-selector">
+        {% for theme in themes %}
+            <button onclick="changeTheme('{% static theme.video.url %}')">{{ theme.name }}</button>
+        {% endfor %}
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        // JavaScript for timer functionalities
+        var timerInterval;
+        var seconds = 0;
+        var minutes = 0;
+        var hours = 0;
+
+        function setTimer() {
+            var userInput = prompt("Enter time in minutes:");
+            if (userInput !== null) {
+                var inputMinutes = parseInt(userInput);
+                if (!isNaN(inputMinutes) && inputMinutes > 0) {
+                    minutes = inputMinutes % 60;
+                    hours = Math.floor(inputMinutes / 60);
+                    updateTimerDisplay();
+                } else {
+                    alert("Invalid input. Please enter a valid number of minutes.");
+                }
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+            updateTimerDisplay();
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function updateTimer() {
+            seconds--;
+            if (seconds < 0) {
+                if (minutes === 0 && hours === 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').innerText = "Timeout!";
+                    return;
+                } else {
+                    seconds = 59;
+                    if (minutes > 0) {
+                        minutes--;
+                    } else {
+                        minutes = 59;
+                        if (hours > 0) {
+                            hours--;
+                        }
+                    }
+                }
+            }
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            var display = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds);
+            document.getElementById('timer').innerText = display;
+        }
+
+        function pad(num) {
+            return (num < 10 ? '0' : '') + num;
+        }
+        function changeTheme(videoUrl) {
+            document.getElementById('background-video').src = videoUrl;
+        }
+    </script>
+</body>
+</html>

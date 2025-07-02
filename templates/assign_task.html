@@ -1,0 +1,44 @@
+<!-- assign task -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Task</title>
+</head>
+<body>
+    <h1>Assign Task</h1>
+    
+    <form>
+        <!-- task_detail.html -->
+        <!-- Other form elements -->
+    
+        <!-- Button to assign task -->
+       
+    <form method="POST" action="{% url 'assign_task' task_id=task.task_id %}">Assign Task</a>
+    </form>
+        {% csrf_token %}
+        
+        <!-- Display task details -->
+        <label for="task">Select Task:</label>
+        <select id="task" name="task">
+            {% for task in tasks %}
+                <option value="{{ task.id }}">{{ task.task_name }}</option>
+            {% endfor %}
+        </select>
+        
+        <!-- Display user options -->
+        <label for="user">Assign To:</label>
+        <select id="user" name="user">
+            {% for user in users %}
+                <option value="{{ user.username }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+        <!-- Example usage in a template -->
+        
+        
+        <button type="submit">Assign Task</button>
+    </form>
+</body>
+</html>
