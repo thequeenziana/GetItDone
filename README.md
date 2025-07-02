@@ -32,10 +32,10 @@ goal. It is designed with a user-friendly interface to increase your productivit
 22. Pop-up notifications
 
 ### Technologies Used in Implementation 
-- Framework: For front end we have used: <br>
+- Framework:  <br>
 ● Bootstrap <br>
 ● Django <br>
-- For database we have used: <br>
+- Database <br>
 ● Sqlite3 <br>
 - Languages:  <br>
 ● HTML <br>
